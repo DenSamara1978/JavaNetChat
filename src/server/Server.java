@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -29,10 +30,12 @@ public class Server {
 
             while (true) {
                 socket = server.accept();
+                socket.setSoTimeout(120000);
                 System.out.println("Клиент подключился");
                 new ClientHandler(socket, this);
             }
-
+        } catch (SocketTimeoutException e) {
+            System.out.println ("Клиент отключился по тайм-ауту");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
